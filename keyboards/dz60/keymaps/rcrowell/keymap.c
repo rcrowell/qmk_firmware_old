@@ -50,10 +50,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         register_mods(MOD_BIT(KC_LSHIFT));
       } else {
         if (!user_lshift_interrupted && timer_elapsed(user_lshift_timer) < 200) {
-          rgblight_enable();
+          rgblight_toggle();
           register_code(KC_MINUS);
           unregister_code(KC_MINUS);
-          rgblight_disable();
+          rgblight_toggle();
         }
         unregister_mods(MOD_BIT(KC_LSHIFT));
       }
@@ -68,12 +68,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         unregister_mods(MOD_BIT(KC_LALT));
         if (!user_lalt_interrupted && timer_elapsed(user_lalt_timer) < 200) {
-          rgblight_enable();
+          rgblight_toggle();
           register_code(KC_LSHIFT);
           register_code(KC_9);
           unregister_code(KC_9);
           unregister_code(KC_LSHIFT);
-          rgblight_disable();
+          rgblight_toggle();
         }
       }
       return false;
@@ -87,12 +87,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         unregister_mods(MOD_BIT(KC_LGUI));
         if (!user_lgui_interrupted && timer_elapsed(user_lgui_timer) < 200) {
-          rgblight_enable();
+          rgblight_toggle();
           register_code(KC_LSHIFT);
           register_code(KC_0);
           unregister_code(KC_0);
           unregister_code(KC_LSHIFT);
-          rgblight_disable();
+          rgblight_toggle();
         }
       }
       return false;
