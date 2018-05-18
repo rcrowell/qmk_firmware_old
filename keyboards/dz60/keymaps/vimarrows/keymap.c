@@ -1,4 +1,5 @@
 #include "dz60.h"
+#include <print.h>
 
 #define MODS_CTRL_MASK  (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT))
 
@@ -72,26 +73,72 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_ESC_FORCEQUIT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_esc_forcequit_finished, dance_esc_forcequit_reset)
 };
 
+
+// layers
+enum {
+  _QWERTY,
+  _EU4,
+  _FN
+};
+
+
+// usb leds
+void led_set_user(uint8_t usb_led) {
+  // rgblight_setrgb(0x00, 0x00, 0xFF);
+  if (usb_led & (1 << USB_LED_CAPS_LOCK)) {
+    rgblight_setrgb(0x00, 0x00, 0xFF);
+  } else {
+    if (layer_state_is(_QWERTY)) {
+      rgblight_setrgb(0x00, 0x00, 0xFF);
+    } else if (layer_state_is(_FN)) {
+      rgblight_setrgb(0xFF, 0x00, 0x00);
+    } else if (layer_state_is(_EU4)) {
+      rgblight_setrgb(0x00, 0xFF, 0x00);
+    }
+  }
+};
+
+/* uint32_t layer_state_set_user(uint32_t state) { */
+/*   switch (biton32(state)) { */
+/*     case _QWERTY: */
+/*       rgblight_setrgb(0xFF, 0xFF, 0x00); */
+/*       break; */
+/*     case _FN: */
+/*       rgblight_setrgb(0xFF, 0x00, 0x00); */
+/*       break; */
+/*     case _EU4: */
+/*       //rgblight_setrgb (0x00,  0xFF, 0x00); */
+/*       break; */
+/*     default: */
+/*       //rgblight_setrgb (0x00,  0xFF, 0xFF); */
+/*       break; */
+/*   } */
+/*   return state; */
+/* } */
+
+
+// keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // standard layer
-  KEYMAP(
+  [_QWERTY] = KEYMAP(
          KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_EQL, KC_BSLASH, TD(TD_ESC_FORCEQUIT),
          KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC, KC_BSPACE,
          KC_LCTL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_ENT,
          KC_LSPO, KC_NO, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSPC, KC_NO,
-         MO(1), KC_LALT, KC_LGUI, KC_SPC, KC_SPC, KC_SPC, KC_RGUI, KC_UP, KC_LEFT, KC_DOWN, KC_RIGHT),
+         MO(_FN), KC_LALT, KC_LGUI, KC_SPC, KC_SPC, KC_SPC, KC_RGUI, KC_UP, KC_LEFT, KC_DOWN, KC_RIGHT),
   // standard fn layer
-  KEYMAP(
+  [_FN] = KEYMAP(
          RESET, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_AUDIO_VOL_DOWN, KC_AUDIO_VOL_UP,
-         KC_TRNS, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_DELETE,
+         KC_TRNS, RGB_TOG, RGB_VAD, RGB_VAI, RGB_MODE_PLAIN, RGB_MODE_BREATHE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_DELETE,
          KC_CAPS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MEDIA_PLAY_PAUSE,
          MY_LSHIFT_LBRACE, KC_TRNS, KC_TRNS, KC_TRNS, BL_DEC, BL_TOGG, BL_INC, BL_STEP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MY_RSHIFT_RBRACE, KC_TRNS,
-         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TG(2), KC_PGUP, KC_MEDIA_PREV_TRACK, KC_PGDOWN, KC_MEDIA_NEXT_TRACK),
-  // wasd layer
-  KEYMAP(
+         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TG(_EU4), KC_PGUP, KC_MEDIA_PREV_TRACK, KC_PGDOWN, KC_MEDIA_NEXT_TRACK),
+
+  // eu4 layer
+  [_EU4] = KEYMAP(
          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
          KC_TRNS, KC_TRNS, KC_UP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
          KC_TRNS, KC_LEFT, KC_DOWN, KC_RIGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+         MO(_FN), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 };
