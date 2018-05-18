@@ -85,36 +85,19 @@ enum {
 // usb leds
 void led_set_user(uint8_t usb_led) {
   // rgblight_setrgb(0x00, 0x00, 0xFF);
-  if (usb_led & (1 << USB_LED_CAPS_LOCK)) {
-    rgblight_setrgb(0x00, 0x00, 0xFF);
+  if (usb_led & (1 << USB_LED_NUM_LOCK)) {
+    rgblight_setrgb(0xFF, 0x00, 0xFF);
+    //layer_on(_EU4);
   } else {
     if (layer_state_is(_QWERTY)) {
       rgblight_setrgb(0x00, 0x00, 0xFF);
-    } else if (layer_state_is(_FN)) {
-      rgblight_setrgb(0xFF, 0x00, 0x00);
     } else if (layer_state_is(_EU4)) {
       rgblight_setrgb(0x00, 0xFF, 0x00);
+    } else if (layer_state_is(_FN)) {
+      rgblight_setrgb(0xFF, 0x00, 0x00);
     }
   }
 };
-
-/* uint32_t layer_state_set_user(uint32_t state) { */
-/*   switch (biton32(state)) { */
-/*     case _QWERTY: */
-/*       rgblight_setrgb(0xFF, 0xFF, 0x00); */
-/*       break; */
-/*     case _FN: */
-/*       rgblight_setrgb(0xFF, 0x00, 0x00); */
-/*       break; */
-/*     case _EU4: */
-/*       //rgblight_setrgb (0x00,  0xFF, 0x00); */
-/*       break; */
-/*     default: */
-/*       //rgblight_setrgb (0x00,  0xFF, 0xFF); */
-/*       break; */
-/*   } */
-/*   return state; */
-/* } */
 
 
 // keymap
@@ -131,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          RESET, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_AUDIO_VOL_DOWN, KC_AUDIO_VOL_UP,
          KC_TRNS, RGB_TOG, RGB_VAD, RGB_VAI, RGB_MODE_PLAIN, RGB_MODE_BREATHE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_DELETE,
          KC_CAPS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MEDIA_PLAY_PAUSE,
-         MY_LSHIFT_LBRACE, KC_TRNS, KC_TRNS, KC_TRNS, BL_DEC, BL_TOGG, BL_INC, BL_STEP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MY_RSHIFT_RBRACE, KC_TRNS,
+         MY_LSHIFT_LBRACE, KC_TRNS, KC_TRNS, KC_TRNS, BL_DEC, BL_TOGG, BL_INC, KC_NUMLOCK, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MY_RSHIFT_RBRACE, KC_TRNS,
          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TG(_EU4), KC_PGUP, KC_MEDIA_PREV_TRACK, KC_PGDOWN, KC_MEDIA_NEXT_TRACK),
 
   // eu4 layer
