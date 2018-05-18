@@ -2,6 +2,7 @@
 #include <print.h>
 
 #define MODS_CTRL_MASK  (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT))
+#define RGBLIGHT_SLEEP
 
 // custom keycodes
 enum custom_keycodes {
@@ -87,27 +88,23 @@ void led_set_user(uint8_t usb_led) {
   static uint8_t prev_usb_led;
   bool is_num_lock = (usb_led & (1 << USB_LED_NUM_LOCK));
   bool was_num_lock = (prev_usb_led & (1 << USB_LED_NUM_LOCK));
-  if (is_num_lock && !was_num_lock) {
-    // rgblight_setrgb(0xFF, 0x00, 0xFF);
-    layer_on(_WASD);
-  } else if (!is_num_lock && was_num_lock) {
-    // rgblight_setrgb(0xFF, 0xFF, 0x00);
-    layer_off(_WASD);
+  if (is_num_lock != was_num_lock) {
+    layer_invert(_WASD);
   }
   prev_usb_led = usb_led;
 };
 
 uint32_t layer_state_set_user(uint32_t state) {
-  layer_debug();
+  uint8_t rgb_val = rgblight_get_val();
   switch (biton32(state)) {
     case _QWERTY:
-      rgblight_setrgb(0x00, 0x00, 0xFF);
+      rgblight_sethsv(179, 48, rgb_val);
       break;
     case _WASD:
-      rgblight_setrgb(0x00, 0xFF, 0x00);
+      rgblight_sethsv(128, 156, rgb_val);
       break;
     case _FN:
-      rgblight_setrgb(0xFF, 0x00, 0x00);
+      rgblight_sethsv(0, 186, rgb_val);
       break;
   }
   return state;
@@ -133,7 +130,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   // wasd layer, activated during numlock
   [_WASD] = KEYMAP(
-         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+         KC_F1, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
          KC_TRNS, KC_TRNS, KC_UP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
          KC_TRNS, KC_LEFT, KC_DOWN, KC_RIGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
